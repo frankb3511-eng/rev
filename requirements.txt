@@ -1,0 +1,13 @@
+# Runtime
+flask>=3.0
+requests>=2.31
+numpy>=1.26
+pillow>=10.2
+opencv-python-headless>=4.9
+scikit-image>=0.22
+scipy>=1.11
+imagehash>=4.3        # reference implementation; app/hashing.py computes the
+                      # hashes directly so the pipeline has no optional dep
+
+# Development / tests
+pytest>=8.0

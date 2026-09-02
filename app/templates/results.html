@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Results &middot; rev</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header class="masthead small">
+  <h1><a href="/">rev</a></h1>
+  <p class="tagline">Run <code id="run-id">{{ run_id }}</code></p>
+</header>
+
+<main class="wrap wide">
+
+  <!-- ============ 1:1 MATCH CHECK (prominent, always at the top) ============ -->
+  <section class="card matchcheck" id="matchcheck">
+    <h2>1:1 MATCH CHECK</h2>
+    <p class="status-line" id="status-line">
+      <span class="spinner"></span><span id="status-text">Searching&hellip;</span>
+    </p>
+    <div class="headline" id="headline" hidden></div>
+    <dl class="counts" id="counts" hidden></dl>
+  </section>
+
+  <!-- ============ Original ================================================== -->
+  <section class="card original-card" id="original-card" hidden>
+    <h2>Your image</h2>
+    <div class="original-row">
+      <img id="original-img" alt="uploaded original">
+      <dl id="original-meta"></dl>
+    </div>
+  </section>
+
+  <!-- ============ Engines =================================================== -->
+  <section class="card" id="engines-card" hidden>
+    <h2>Search engines</h2>
+    <table class="engines-table" id="engines-table"></table>
+    <p class="note">
+      &ldquo;Results&rdquo; is what the engine returned. It says nothing about whether any of
+      them is your image &mdash; that is what the local verification below decides.
+    </p>
+  </section>
+
+  <!-- ============ Grouped results =========================================== -->
+  <div id="groups"></div>
+
+  <!-- ============ Pipeline trace ============================================ -->
+  <section class="card" id="trace-card" hidden>
+    <h2>Pipeline trace</h2>
+    <table class="trace-table" id="trace-table"></table>
+  </section>
+</main>
+
+<!-- ============ Comparison viewer =========================================== -->
+<div class="modal" id="compare-modal" hidden>
+  <div class="modal-inner">
+    <header class="modal-head">
+      <div>
+        <h3 id="cmp-title">Compare</h3>
+        <p id="cmp-sub"></p>
+      </div>
+      <button class="close" id="cmp-close" aria-label="Close">&times;</button>
+    </header>
+
+    <nav class="modes">
+      <button data-mode="side" class="on">Side by side</button>
+      <button data-mode="overlay">Overlay</button>
+      <button data-mode="difference">Difference</button>
+      <button data-mode="heatmap">Difference map</button>
+    </nav>
+
+    <div class="toolbar">
+      <label class="slider-label" id="overlay-wrap" hidden>
+        Blend
+        <input type="range" id="blend" min="0" max="100" value="50">
+        <span id="blend-val">50%</span>
+      </label>
+      <button id="zoom-out">&minus;</button>
+      <button id="zoom-in">+</button>
+      <button id="zoom-fit">Fit</button>
+      <span id="zoom-val">100%</span>
+    </div>
+
+    <div class="viewport" id="viewport">
+      <div class="canvas-holder" id="canvas-holder">
+        <img id="cmp-a" alt="original">
+        <img id="cmp-b" alt="candidate">
+        <canvas id="cmp-canvas"></canvas>
+      </div>
+    </div>
+
+    <footer class="modal-foot" id="cmp-foot"></footer>
+  </div>
+</div>
+
+<script>
+  window.RUN_ID = "{{ run_id }}";
+</script>
+<script src="{{ url_for('static', filename='results.js') }}"></script>
+</body>
+</html>
