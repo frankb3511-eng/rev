@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Application data: uploads, downloaded candidates and run reports.
+# Written as data/* rather than data/ so the corpus placeholder below can be
+# negated -- git will not descend into a wholly-ignored directory, so
+# "!data/corpus/.gitkeep" under "data/" silently did nothing.
+data/*
+!data/corpus/
+data/corpus/*
+!data/corpus/.gitkeep
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

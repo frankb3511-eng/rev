@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rev &mdash; reverse image search with independent 1:1 verification</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header class="masthead">
+  <h1>rev</h1>
+  <p class="tagline">
+    Reverse image search across multiple engines, then an
+    <strong>independent local 1:1 verification pass</strong> on the pixels themselves.
+    What an engine calls &ldquo;visually similar&rdquo; is reported separately from what the
+    local matcher can actually prove.
+  </p>
+</header>
+
+<main class="wrap">
+  <section class="card upload-card">
+    <h2>Upload an image</h2>
+    <form id="upload-form" enctype="multipart/form-data">
+      <label class="dropzone" id="dropzone">
+        <input type="file" name="image" id="image-input" accept="image/*" required>
+        <span class="dz-text">
+          <strong>Choose an image</strong> or drop one here
+          <small id="file-name">JPG, PNG, WebP, GIF, BMP or TIFF &middot; up to 32&nbsp;MiB</small>
+        </span>
+        <img id="preview" alt="" hidden>
+      </label>
+
+      <fieldset class="engines">
+        <legend>Search engines</legend>
+        <div class="engine-grid">
+          {% for e in engines %}
+          <label class="engine {% if not e.available %}disabled{% endif %}">
+            <input type="checkbox" name="engines" value="{{ e.name }}"
+                   {% if e.available %}checked{% else %}disabled{% endif %}>
+            <span>
+              <strong>{{ e.display_name }}</strong>
+              <small>{{ e.note }}</small>
+            </span>
+          </label>
+          {% endfor %}
+        </div>
+      </fieldset>
+
+      <label class="demo-toggle">
+        <input type="checkbox" name="demo" id="demo" value="1">
+        <span>
+          <strong>Offline demo mode</strong>
+          <small>Synthesise a result set from your upload (resizes, re-encodes, crops, a
+          lookalike shot, unrelated images) so the real verification pipeline can be
+          exercised with no engine access.</small>
+        </span>
+      </label>
+
+      <button type="submit" id="go">Search &amp; verify</button>
+    </form>
+  </section>
+
+  <section class="card pipeline-card">
+    <h2>What happens after you upload</h2>
+    <ol class="pipeline">
+      <li><strong>Stage 1</strong> URL &amp; content-hash deduplication</li>
+      <li><strong>Stage 2</strong> fast perceptual hashing (aHash, dHash, pHash, wHash)</li>
+      <li><strong>Stage 3</strong> candidate filtering</li>
+      <li><strong>Stage 4</strong> pixel &amp; structural comparison (SSIM, NRMSE, gradients, edit attribution)</li>
+      <li><strong>Stage 5</strong> feature &amp; embedding verification (ORB + RANSAC, template localisation)</li>
+      <li><strong>Stage 6</strong> cross-engine merge of duplicate results</li>
+    </ol>
+    <p class="note">
+      Every threshold and weight is declared in <code>app/config.py</code> and documented in
+      <a href="https://github.com/">docs/MATCHING.md</a>. Nothing here uses a search
+      engine&rsquo;s own similarity label to decide a match.
+    </p>
+  </section>
+</main>
+
+<script src="{{ url_for('static', filename='upload.js') }}"></script>
+</body>
+</html>
